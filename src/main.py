@@ -1,9 +1,6 @@
-from extract import fetch_repository
-from transform import transform_repository
-from load import load_repository
-from extract import fetch_repository, fetch_commits
-from transform import transform_repository, transform_commits
-from load import load_repository, load_commits
+from extract import fetch_repository, fetch_commits, fetch_contributors
+from transform import transform_repository, transform_commits, transform_contributors
+from load import load_repository, load_commits, load_contributors
 
 def main():
     owner = input("GitHub Owner: ")
@@ -14,6 +11,12 @@ def main():
     load_repository(clean_repo)
 
     print(f"✅ {owner}/{repo} loaded successfully!")
+
+    contributors = fetch_contributors(owner, repo)
+    clean_contributors = transform_contributors(contributors)
+    load_contributors(clean_contributors)
+
+    print(f"Loaded {len(clean_contributors)} contributors")
 
 
     commits = fetch_commits(owner, repo)

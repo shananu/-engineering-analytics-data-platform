@@ -23,3 +23,15 @@ def transform_commits(commits, repository_id):
         })
 
     return transformed
+
+def transform_contributors(contributors):
+    transformed = []
+
+    for contributor in contributors:
+        transformed.append({
+            "id": contributor["id"],
+            "username": contributor["login"],
+            "profile_url": contributor["html_url"]
+        })
+
+    return transformed

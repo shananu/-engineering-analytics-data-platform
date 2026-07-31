@@ -23,6 +23,16 @@ def fetch_commits(owner, repo, per_page=100):
 
     raise Exception(f"GitHub API Error: {response.status_code}")
 
+def fetch_contributors(owner, repo):
+    url = f"{BASE_URL}/repos/{owner}/{repo}/contributors"
+
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return response.json()
+
+    raise Exception(f"GitHub API Error: {response.status_code}")
+
 
 if __name__ == "__main__":
     repository = fetch_repository("microsoft", "vscode")

@@ -66,3 +66,28 @@ def load_commits(commits):
 
     cur.close()
     conn.close()
+
+
+def load_contributors(contributors):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    query = """
+    INSERT INTO contributors (id, username, profile_url)
+    VALUES (%s, %s, %s)
+    ON CONFLICT (id) DO UPDATE
+    SET
+        username = EXCLUDED.username,
+        profile_url = EXCLUDED.profile_url;
+    """
+
+    for contributor in contributors:
+        cur.execute(query, (
+            contributor["id"],
+            contributor["username"],
+            contributor["profile_url"]
+        ))
+
+    conn.commit()
+    cur.close()
+    conn.close()
