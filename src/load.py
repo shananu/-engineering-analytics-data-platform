@@ -1,4 +1,5 @@
 from database import get_connection
+from psycopg2.extras import execute_values
 
 def load_repository(repo):
     conn = get_connection()
@@ -41,26 +42,32 @@ def load_commits(commits):
     conn = get_connection()
     cur = conn.cursor()
 
-    query = """
-    INSERT INTO commits (
-        sha,
-        repository_id,
-        contributor_id,
-        message,
-        commit_date
-    )
-    VALUES (%s,%s,%s,%s,%s)
-    ON CONFLICT (sha) DO NOTHING;
-    """
-
-    for commit in commits:
-        cur.execute(query, (
+    values = [
+        (
             commit["sha"],
             commit["repository_id"],
             commit["contributor_id"],
             commit["message"],
             commit["commit_date"]
-        ))
+        )
+        for commit in commits
+    ]
+
+    execute_values(
+        cur,
+        """
+        INSERT INTO commits (
+            sha,
+            repository_id,
+            contributor_id,
+            message,
+            commit_date
+        )
+        VALUES %s
+        ON CONFLICT (sha) DO NOTHING;
+        """,
+        values
+    )
 
     conn.commit()
 

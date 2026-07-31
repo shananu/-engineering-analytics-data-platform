@@ -3,6 +3,11 @@ from transform import transform_repository, transform_commits, transform_contrib
 from load import load_repository, load_commits, load_contributors
 import logging 
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 def main():
     owner = input("GitHub Owner: ")
     repo = input("Repository Name: ")
@@ -11,10 +16,11 @@ def main():
     clean_repo = transform_repository(raw_repo)
     load_repository(clean_repo)
 
-    logging.basicConfig(
+    logging.info(f"{owner}/{repo} loaded successfully!")
+
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
-)
+
 
     logging.info(f"{owner}/{repo} loaded successfully!")
 
